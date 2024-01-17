@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, 
+    initial-scale=1.0">
+    <title>Reset Password</title>
+    <link rel="stylesheet" href="/Stylesheets/login_signup.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    
+    <div class="wrapper">
+        <!--Login page,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,-->
+        <form action="/accounts/password-reset" method="POST" id="newPassword" class="input-group">
+            <!--login , name and password -->
+            <h1>Reset Password</h1>
+            <div class="input-box">
+                <h3>Create New Password</h3>
+                <input required name="password" type="Password" 
+                placeholder="Password">
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class="input-box">
+                <h3>Confirm Password</h3>
+                <input required name="cpassword" type="Password" 
+            placeholder="Password">
+                <i class='bx bxs-lock-alt'></i>
+            </div>
+            
+            <!--Remember me-->
+            <div class="remember-forgot">
+                
+                
+            </div>
+
+            <!--Login Button-->
+            <button type="submit" class="btn">Confirm Reset</button>
+
+            <!--Registration link-->
+            
+            <div class="register-link">
+                <!-- <p>Don't have an account? <a href="/register" id="show-register-form">Register</a></p> -->
+            </div>
+        </form>
+    
+
+   
+    </div>
+
+
+    
+    
+<script>
+        
+</script>
+    
+</body>
+</html>
+
+

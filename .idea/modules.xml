@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Phone-Book-App-v2.iml" filepath="$PROJECT_DIR$/.idea/Phone-Book-App-v2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phone-book-app-frontend/phone-book-app-frontend.iml" filepath="$PROJECT_DIR$/phone-book-app-frontend/phone-book-app-frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/phone-book-backend/phone-book-backend.iml" filepath="$PROJECT_DIR$/phone-book-backend/phone-book-backend.iml" />
+    </modules>
+  </component>
+</project>

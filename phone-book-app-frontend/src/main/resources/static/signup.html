@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, 
+    initial-scale=1.0">
+    <title>Sign-up form</title>
+    <link rel="stylesheet" href="/Stylesheets/login_signup.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    
+    <div class="wrapper">
+    <!--signup page,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,-->
+    
+    <form action="/register" method="POST" id="Register" class="input-group">
+        <!--id,username ,password, confirm password -->
+        <h1>Sign up</h1>
+        <div class="input-box">
+            <input required  name="name" id="name" type="text" placeholder="Username">
+            <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+            <input required name="phoneNum" id="phoneNum" type="number" placeholder="Contact Number">
+            <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+            <input name="email" type="text" placeholder="Gmail id">
+            <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+            <input required name="password" type="Password" 
+            placeholder="Password">
+            <i class='bx bxs-lock-alt'></i>
+        </div>
+        <!-- <div class="input-box">
+            <input  type="Confirm Password" 
+            placeholder="Confirm Password"required>
+            <i class='bx bxs-lock-alt'></i>
+        </div> -->
+        
+        <div class="remember-forgot">
+            <label><input type="checkbox">I agree to the terms and conditions </label>
+        </div>
+       <!--Regiter Button-->
+        <button type="submit" class="btn">Register</button>
+        <div class="login-link">
+            <p>Already have an account? <a href="/login" id="login-ref">Login</a></p>
+        </div>
+     </form>
+    </div>
+
+<!-- convert from login to sign-up page by clicking register button-->
+    
+    
+    
+    
+</body>
+</html>
+
+
