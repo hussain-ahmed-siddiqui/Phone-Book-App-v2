@@ -22,7 +22,7 @@ public FrontendController(){
     @GetMapping("/")
     public String redirect(){
 
-            return "redirect:/contactList.html";
+            return "redirect:/login.html";
 
     }
     @GetMapping("/login")
