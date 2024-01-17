@@ -129,9 +129,6 @@ EmailServiceImpl emailService;
         User user = findUser(phoneNum);
         HttpHeaders headers = new HttpHeaders();
         if(user!=null) {
-            ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-            HttpSession session = attr.getRequest().getSession(true); // true == allow create
-            session.setAttribute("forLogin",phoneNum);
             String email = user.getEmail();
             Random random = new Random();
             int otp = 1000 + random.nextInt(9000);
@@ -180,14 +177,11 @@ EmailServiceImpl emailService;
         return null;
     }
 
-    public ResponseEntity<?> resetPass(String newPassword) {
+    public ResponseEntity<?> resetPass(String newPassword,String phoneNum) {
         String hashedPassword = passwordEncoder.encode(newPassword);
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = attr.getRequest().getSession(false); // true == allow create
-        String phoneNum = (String) session.getAttribute("forLogin");
+
         HttpHeaders headers = new HttpHeaders();
         User user = userRepository.findByPhoneNum(phoneNum);
-            currentSession().invalidate();
             userRepository.findById(user.getId()).map(
                     existing_user-> {
                         existing_user.setPassword(hashedPassword);

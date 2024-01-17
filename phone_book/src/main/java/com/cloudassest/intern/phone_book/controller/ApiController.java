@@ -65,6 +65,7 @@ public class ApiController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> sendMail(@RequestParam String phoneNum){
+        System.out.println("hell yeah");
         return phoneServices.sendOtp(phoneNum);
     }
     @PostMapping("/OTP")
@@ -72,13 +73,15 @@ public class ApiController {
         return phoneServices.verifyOtp(otp);
     }
     @PostMapping("/accounts/password-reset")
-    public ResponseEntity<?> reset(@RequestParam String password){
-        return phoneServices.resetPass(password);
+    public ResponseEntity<?> reset(@RequestParam String password, @RequestParam String phoneNum){
+        return phoneServices.resetPass(password,phoneNum);
     }
     @GetMapping("/contacts/search")
     public List<Contact> searchContacts(@RequestParam String query){
         return phoneServices.searchContact(query);
     }
+
+
 
     @GetMapping("/performLogout")
     public void logout(){

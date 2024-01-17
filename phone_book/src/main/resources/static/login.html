@@ -6,7 +6,7 @@
 
     <meta name="viewport" content="width=device-width, 
     initial-scale=1.0">
-    <title>Reset Password</title>
+    <title>Login form</title>
     <link rel="stylesheet" href="/Stylesheets/login_signup.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -14,39 +14,34 @@
     
     <div class="wrapper">
         <!--Login page,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,-->
-        <form action="/accounts/password-reset" method="POST" id="newPassword" class="input-group">
+        <form action="/login" method="POST" id="Login" class="input-group">
             <!--login , name and password -->
-            <h1>Reset Password</h1>
+            <h1>Login</h1>
             <div class="input-box">
-                <h3>Create New Password</h3>
-                <input required name="password" type="Password" 
-                placeholder="Password">
+                <input required name="phoneNum" id="phoneNum" type="number" placeholder="Contact Number">
                 <i class='bx bxs-user'></i>
             </div>
             <div class="input-box">
-                <h3>Confirm Password</h3>
-                <input required name="cpassword" type="Password" 
+                <input required name="password" type="Password" 
             placeholder="Password">
-        <input id="phoneNum" name="phoneNum" type="number" hidden="hidden">
-
                 <i class='bx bxs-lock-alt'></i>
             </div>
             
             <!--Remember me-->
             <div class="remember-forgot">
-                
+                <label><input type="checkbox"> Remember me</label>
+                   <a href="/forgot-password.html">Forgot Password?</a>
                 
             </div>
 
             <!--Login Button-->
-            <button type="submit" class="btn">Confirm Reset</button>
+            <button type="submit" class="btn">Login</button>
 
             <!--Registration link-->
             
             <div class="register-link">
-                <!-- <p>Don't have an account? <a href="/register" id="show-register-form">Register</a></p> -->
+                <p>Don't have an account? <a href="/register" id="show-register-form">Register</a></p>
             </div>
-
         </form>
     
 
@@ -57,9 +52,7 @@
     
     
 <script>
-    document.getElementById('phoneNum').setAttribute('value',localStorage.getItem('phoneNum'));
-    localStorage.clear();
-
+        
 </script>
     
 </body>
