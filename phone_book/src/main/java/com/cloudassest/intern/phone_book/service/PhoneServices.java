@@ -10,6 +10,7 @@ import com.cloudassest.intern.phone_book.repositories.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +19,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -128,6 +130,12 @@ EmailServiceImpl emailService;
     public ResponseEntity<?> sendOtp(String phoneNum) {
         User user = findUser(phoneNum);
         HttpHeaders headers = new HttpHeaders();
+        headers.setAccessControlAllowOrigin("*"); // Set this to a specific domain if needed
+        headers.setAccessControlAllowMethods(Arrays.asList(
+                HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.OPTIONS
+        ));
+        headers.setAccessControlMaxAge(3600L);
+        headers.setAccessControlAllowHeaders(Arrays.asList("Content-Type", "Accept", "X-Requested-With", "remember-me"));
         if(user!=null) {
             String email = user.getEmail();
             Random random = new Random();
@@ -142,10 +150,10 @@ EmailServiceImpl emailService;
             if (emailService.sendSimpleMail(emailDetails) == "1") {
                 otpRepository.save(otpObject);
 
-                headers.add("Location", "/accounts/verify-otp");
+                return ResponseEntity.ok().headers(headers).body("{\"status\": 1}");
 
             } else {
-                headers.add("Location", "/forgot-password");
+                return ResponseEntity.ok().headers(headers).body("{\"status\": 0}");
 
             }
         }
