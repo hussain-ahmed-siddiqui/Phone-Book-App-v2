@@ -35,6 +35,16 @@ public class PhoneServices {
 @Autowired
 EmailServiceImpl emailService;
 
+private final HttpHeaders headers;
+public PhoneServices(){
+    headers = new HttpHeaders();
+    headers.setAccessControlAllowOrigin("*"); // Set this to a specific domain if needed
+    headers.setAccessControlAllowMethods(Arrays.asList(
+            HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.OPTIONS
+    ));
+    headers.setAccessControlMaxAge(3600L);
+    headers.setAccessControlAllowHeaders(Arrays.asList("Content-Type", "Accept", "X-Requested-With", "remember-me"));
+}
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public HttpSession currentSession(){
@@ -69,22 +79,22 @@ EmailServiceImpl emailService;
             newUser.setEmail(email);
         }
         userRepository.save(newUser);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/login");
-        return new ResponseEntity<>(headers,HttpStatus.FOUND);
+        HttpHeaders headers1 = new HttpHeaders(headers);
+        headers1.add("Location", "/login");
+        return new ResponseEntity<>(headers1,HttpStatus.FOUND);
     }
 
     public ResponseEntity<?> AuthenticateUser(String phoneNum, String password){
         User user = userRepository.findByPhoneNum(phoneNum);
-        HttpHeaders headers = new HttpHeaders();
+        HttpHeaders headers1 = new HttpHeaders(headers);
 
 
         if(!passwordEncoder.matches(password, user.getPassword())){
-            headers.add("Location", "/login");
+            headers1.add("Location", "/login");
             return new ResponseEntity<>(headers,HttpStatus.FOUND);
         }
         if(user==null){
-            headers.add("Location", "/login");
+            headers1.add("Location", "/login");
             return new ResponseEntity<>(headers,HttpStatus.FOUND);
         }
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
@@ -92,8 +102,8 @@ EmailServiceImpl emailService;
         session.setAttribute("phoneNum", phoneNum);
         session.setAttribute("userId",user.getId());
         session.setMaxInactiveInterval(30*60);
-        headers.add("Location", "/contacts/list");
-        return new ResponseEntity<>(headers,HttpStatus.FOUND);
+        headers1.add("Location", "/contacts/list");
+        return new ResponseEntity<>(headers1,HttpStatus.FOUND);
     }
 
     public ResponseEntity<?> addContact(String firstName, String middleName, String lastName, String phone, String email) {
@@ -102,9 +112,9 @@ EmailServiceImpl emailService;
         contact.setEmail(email);
         contact.setUser(getCurrentUser());
         contactRepository.save(contact);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/contacts/list");
-        return new ResponseEntity<>(headers,HttpStatus.FOUND);
+        HttpHeaders headers1 = new HttpHeaders(headers);
+        headers1.add("Location", "/contacts/list");
+        return new ResponseEntity<>(headers1,HttpStatus.FOUND);
 
     }
 
@@ -130,13 +140,8 @@ EmailServiceImpl emailService;
 
     public ResponseEntity<?> sendOtp(String phoneNum) {
         User user = findUser(phoneNum);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccessControlAllowOrigin("*"); // Set this to a specific domain if needed
-        headers.setAccessControlAllowMethods(Arrays.asList(
-                HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.OPTIONS
-        ));
-        headers.setAccessControlMaxAge(3600L);
-        headers.setAccessControlAllowHeaders(Arrays.asList("Content-Type", "Accept", "X-Requested-With", "remember-me"));
+//        HttpHeaders headers = new HttpHeaders();
+
         if(user!=null) {
             String email = user.getEmail();
             Random random = new Random();
@@ -162,23 +167,23 @@ EmailServiceImpl emailService;
 
     }
 
-    public ResponseEntity<?> verifyOtp(String otp) {
+    public ResponseEntity<?> verifyOtp(String otp, String phoneNum) {
         Otp otpObject = new Otp();
         otpObject.setOtp(otp);
 
         try {
             otpObject = otpRepository.findByOtp(otp);
 
-        HttpHeaders headers= new HttpHeaders();
         if(otpObject!=null){
             otpRepository.delete(otpObject);
-
-            headers.add("Location","/accounts/password-reset");
-            return new ResponseEntity<>(headers,HttpStatus.FOUND);
+            System.out.println("yeah");
+//            headers.add("Location","/accounts/password-reset");
+            return ResponseEntity.ok().headers(headers).body("{\"status\": 1}");
         }
         else{
-            headers.add("Location","/accounts/verify-otp");
-            return new ResponseEntity<>(headers,HttpStatus.FOUND);
+            System.out.println("no");
+//            headers.add("Location","/accounts/verify-otp");
+            return ResponseEntity.ok().headers(headers).body("{\"status\": 0}");
         }
         }catch (Exception e){
             System.out.println("Error: "+e.getMessage());
@@ -189,7 +194,7 @@ EmailServiceImpl emailService;
     public ResponseEntity<?> resetPass(String newPassword,String phoneNum) {
         String hashedPassword = passwordEncoder.encode(newPassword);
 
-        HttpHeaders headers = new HttpHeaders();
+
         User user = userRepository.findByPhoneNum(phoneNum);
             userRepository.findById(user.getId()).map(
                     existing_user-> {
@@ -201,7 +206,6 @@ EmailServiceImpl emailService;
 
         System.out.println("*********************************");
 
-        headers.add("Location","/login");
-        return new ResponseEntity<>(headers,HttpStatus.FOUND);
+        return ResponseEntity.ok().headers(headers).body("{\"status\": 1}");
     }
 }

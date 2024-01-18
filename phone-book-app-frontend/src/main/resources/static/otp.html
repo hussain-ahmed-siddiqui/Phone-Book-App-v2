@@ -10,12 +10,22 @@
     <!-- css tmne jahan bhi rkhi he old wali uska link dedo -->
     <link rel="stylesheet" href="Stylesheets/login_signup.css">  
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .disabled-button {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     
     <div class="wrapper">
 
-    <form id="OTP" class="input-group" >
+    <form id="OTPform" class="input-group" >
     <h1>Enter OTP</h1>
     
     <p  style="text-align: center; color:rgb(100, 100, 119); margin-top: 7px;">We have sent you access code via email: </p>
@@ -23,11 +33,14 @@
         <!-- <input type="hidden" name="email" value="email" > -->
         <input id="otp" name="otp" type="number" placeholder="4 Digit Number" >
     </div>
-    <button type="submit" class="btn">Submit</button>
+    <button id="verifyOtp" type="button" class="btn">Submit</button>
+    <div id="message" class="message"></div>
+
     </form>
     <br>
-    <button onclick="verifyOtp()" class="btn">Resend OTP</button>
+    <button  class="btn">Resend OTP</button>
     <input id="phoneNum" name="phoneNum" type="number" hidden="hidden">
+    
 </div>
 
 </body>
@@ -35,23 +48,36 @@
     window.onload = function() {
             var test = localStorage.getItem('phoneNum');
             document.getElementById('phoneNum').setAttribute('value', test);
-            localStorage.removeItem('phoneNum');
         };
-    async function verifyOtp(){
-        const otp = document.getElementById('otp').value;
-        const phoneNum = document.getElementById('phoneNum').value;
-        const url = new URL('/OTP','http://localhost:8080');
-        url.searchParams.append('otp',otp);
-        url.searchParams.append('phoneNum',phoneNum);
-        await fetch(url,{
-            method:'POST'
-        })
-        .then(Response=>Response.json())
-        .then(data=> )
-        .catch(error=> console.log('Error: ',error));
-    }
+       
+        const verifyOtp = document.getElementById('verifyOtp');
+        const messageDiv = document.getElementById('message');
 
-            
+        verifyOtp.addEventListener('click', async function() {
+            verifyOtp.classList.add('disabled-button');
+            const phoneNum = document.getElementById('phoneNum').value;
+            const otp = document.getElementById('otp').value;
+            const url = new URL('/OTP', 'http://localhost:8080');
+            url.searchParams.append('phoneNum', phoneNum);
+            url.searchParams.append('otp', otp);
+            localStorage.setItem('phoneNum', phoneNum);
+
+            try {
+                const response = await fetch(url, { method: 'POST' });
+                const data = await response.json();
+                if (data.status === 1) {
+
+                    window.location.href = 'http://localhost:8081/accounts/password-reset';
+                } else {
+                    verifyOtp.classList.remove('disabled-button');
+                    messageDiv.textContent = 'Operation failed. Please try again.';
+                }
+            } catch (error) {
+                console.log('Error:', error);
+                verifyOtp.classList.remove('disabled-button');
+                messageDiv.textContent = 'An error occurred. Please try again.';
+            }
+        });
     
 </script>
 </html>

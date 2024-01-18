@@ -14,18 +14,18 @@
     
     <div class="wrapper">
         <!--Login page,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,-->
-        <form action="/accounts/password-reset" method="POST" id="newPassword" class="input-group">
+        <form id="newPassword" class="input-group">
             <!--login , name and password -->
             <h1>Reset Password</h1>
             <div class="input-box">
                 <h3>Create New Password</h3>
-                <input required name="password" type="Password" 
+                <input required id="password" name="password" type="Password" 
                 placeholder="Password">
                 <i class='bx bxs-user'></i>
             </div>
             <div class="input-box">
                 <h3>Confirm Password</h3>
-                <input required name="cpassword" type="Password" 
+                <input required id="cpassword" name="cpassword" type="Password" 
             placeholder="Password">
         <input id="phoneNum" name="phoneNum" type="number" hidden="hidden">
 
@@ -37,9 +37,10 @@
                 
                 
             </div>
-
+            <!-- Error Message for Password Mismatch -->
+            <p id="password-error" style="color: red;"></p>
             <!--Login Button-->
-            <button type="submit" class="btn">Confirm Reset</button>
+            <button id="resetButton" type="button" class="btn">Confirm Reset</button>
 
             <!--Registration link-->
             
@@ -58,8 +59,42 @@
     
 <script>
     document.getElementById('phoneNum').setAttribute('value',localStorage.getItem('phoneNum'));
-    localStorage.clear();
+    localStorage.removeItem('phoneNum');
 
+    // Password Validation
+        // Event Listener for Reset Button
+        document.getElementById('resetButton').addEventListener('click', async () => {
+            const passwordInput = document.getElementById('password').getAttribute('value');
+            const confirmPasswordInput = document.getElementById('cpassword').getAttribute('value');
+            const passwordError = document.getElementById('password-error');
+
+           
+
+            // Check if passwords match
+            if (passwordInput !== confirmPasswordInput) {
+                passwordError.textContent = 'Passwords do not match.';
+                return;
+            }
+
+
+            // Perform your API call here
+            const phoneNum = document.getElementById('phoneNum').value;
+            const url = new URL('/accounts/password-reset', 'http://localhost:8080');
+            url.searchParams.append('phoneNum', phoneNum);
+            url.searchParams.append('password',password);
+            try {
+                console.log("bruh")
+                const response = await fetch(url, {
+                    method: 'POST'
+                    });
+                const data = response.json();    
+                    // Password reset was successful, you can handle the response here
+                    localStorage.removeItem('phoneNum');
+                    window.location.href = 'http://localhost:8081/login';
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
 </script>
     
 </body>

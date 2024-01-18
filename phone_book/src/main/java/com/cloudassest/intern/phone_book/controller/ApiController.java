@@ -68,8 +68,8 @@ public class ApiController {
         return phoneServices.sendOtp(phoneNum);
     }
     @PostMapping("/OTP")
-    public ResponseEntity<?> checkOTP(@RequestParam String otp){
-        return phoneServices.verifyOtp(otp);
+    public ResponseEntity<?> checkOTP(@RequestParam String otp,@RequestParam String phoneNum){
+        return phoneServices.verifyOtp(otp,phoneNum);
     }
     @PostMapping("/accounts/password-reset")
     public ResponseEntity<?> reset(@RequestParam String password, @RequestParam String phoneNum){
