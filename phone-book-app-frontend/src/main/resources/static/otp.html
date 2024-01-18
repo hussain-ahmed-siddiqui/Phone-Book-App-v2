@@ -15,28 +15,44 @@
     
     <div class="wrapper">
 
-    <form id="OTP" class="input-group" method="POST" action="/OTP">
+    <form id="OTP" class="input-group" >
     <h1>Enter OTP</h1>
     
     <p  style="text-align: center; color:rgb(100, 100, 119); margin-top: 7px;">We have sent you access code via email: </p>
     <div class="input-box">
         <!-- <input type="hidden" name="email" value="email" > -->
-        <input name="otp" type="number" placeholder="4 Digit Number" >
+        <input id="otp" name="otp" type="number" placeholder="4 Digit Number" >
     </div>
     <button type="submit" class="btn">Submit</button>
     </form>
     <br>
-    <button onclick="" class="btn">Resend OTP</button>
+    <button onclick="verifyOtp()" class="btn">Resend OTP</button>
     <input id="phoneNum" name="phoneNum" type="number" hidden="hidden">
 </div>
 
 </body>
 <script>
-     window.onload = function() {
+    window.onload = function() {
             var test = localStorage.getItem('phoneNum');
             document.getElementById('phoneNum').setAttribute('value', test);
-            console.log(document.getElementById('phoneNum').value);
+            localStorage.removeItem('phoneNum');
         };
+    async function verifyOtp(){
+        const otp = document.getElementById('otp').value;
+        const phoneNum = document.getElementById('phoneNum').value;
+        const url = new URL('/OTP','http://localhost:8080');
+        url.searchParams.append('otp',otp);
+        url.searchParams.append('phoneNum',phoneNum);
+        await fetch(url,{
+            method:'POST'
+        })
+        .then(Response=>Response.json())
+        .then(data=> )
+        .catch(error=> console.log('Error: ',error));
+    }
+
+            
+    
 </script>
 </html>
 

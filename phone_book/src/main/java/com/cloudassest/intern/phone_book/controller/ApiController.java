@@ -64,7 +64,7 @@ public class ApiController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> sendMail(@RequestParam String phoneNum){
-        System.out.println("hell yeah");
+//        System.out.println("hell yeah");
         return phoneServices.sendOtp(phoneNum);
     }
     @PostMapping("/OTP")
