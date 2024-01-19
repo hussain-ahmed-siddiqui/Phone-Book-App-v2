@@ -116,7 +116,9 @@ function cancelEdit(row, originalContact) {
 
 
    function loadContacts() {
-    fetch('http://localhost:8080/contacts',{method:'GET'})
+    fetch('http://localhost:8080/contacts',{
+        method:'GET',
+        })
         .then(response => {console.log(response);
         return response.json();})
         .then(contacts => {
@@ -145,7 +147,7 @@ function cancelEdit(row, originalContact) {
     // window.onload = loadContacts;
 
     function logout(){
-        fetch('http://localhost:8080/performLogout') .then(response => {
+        fetch('http://localhost:8080/performLogout',{method:'GET',credentials:"include" }) .then(response => {
             if (response.ok) {
                 window.location.href = '/login'; // Redirect to login page or any other page
             } else {

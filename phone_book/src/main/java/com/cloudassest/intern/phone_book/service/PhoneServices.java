@@ -39,7 +39,7 @@ EmailServiceImpl emailService;
 private final HttpHeaders headers;
 public PhoneServices(){
     headers = new HttpHeaders();
-    headers.setAccessControlAllowOrigin("*"); // Set this to a specific domain if needed
+    headers.setAccessControlAllowOrigin("http://localhost:8081"); // Set this to a specific domain if needed
     headers.setAccessControlAllowMethods(Arrays.asList(
             HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.OPTIONS
     ));
@@ -67,9 +67,6 @@ public PhoneServices(){
     }
     //for fetching the contacts associated with the user that is found by the findByUsername() function
     public ResponseEntity<?> findByUser() {
-        System.out.println(
-        currentSession()==null
-        );
 //        System.out.print("dewef");
 //        String phoneNum = (String) currentSession().getAttribute("phoneNum");
 
@@ -120,7 +117,8 @@ public PhoneServices(){
         session.setAttribute("userId",user.getId());
 //        session.setMaxInactiveInterval(30*60);
         System.out.println(currentSession()==null);
-        System.out.println(headers);
+//        HttpHeaders headers1 = new HttpHeaders(headers);
+//        headers1.add("Location", "http://localhost:8081/contacts/list");
 //        headers1.add("Location", "/contacts/list");
         return ResponseEntity.ok().headers(headers).body("{\"status\": 1}");
 

@@ -29,6 +29,7 @@ public class ApiController {
     ))
     @GetMapping("/contacts")
     public ResponseEntity<?> listUserContacts() {
+        System.out.println(phoneServices.currentSession().getId());
 
         return phoneServices.findByUser();
     }
@@ -50,7 +51,7 @@ public class ApiController {
     @PostMapping("/login")
     public ResponseEntity<?> getForm(@RequestParam String phoneNum, @RequestParam String password){
 //        System.out.println(name+" "+password);
-
+//        System.out.println(phoneServices.currentSession().getId());
         return phoneServices.AuthenticateUser(phoneNum,password);
     }
 
