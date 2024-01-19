@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +28,7 @@ public class ApiController {
     ))
     @GetMapping("/contacts")
     public ResponseEntity<?> listUserContacts() {
-        System.out.println(phoneServices.currentSession().getId());
+//        System.out.println(phoneServices.currentSession().getId());
 
         return phoneServices.findByUser();
     }
@@ -56,9 +55,9 @@ public class ApiController {
     }
 
     @PutMapping("/contacts/edit")
-    public void saveEdits(@RequestParam String _id,@RequestParam String name, @RequestParam String phoneNum, @RequestParam String email){
-
-        phoneServices.updateContact(_id,name,phoneNum,email);
+    public ResponseEntity<?> saveEdits(@RequestParam String _id, @RequestParam String name, @RequestParam String phoneNum, @RequestParam String email){
+        System.out.println("blyat");
+        return phoneServices.updateContact(_id,name,phoneNum,email);
     }
 
     @PostMapping("/forgot-password")
@@ -75,7 +74,7 @@ public class ApiController {
         return phoneServices.resetPass(password,phoneNum);
     }
     @GetMapping("/contacts/search")
-    public List<Contact> searchContacts(@RequestParam String query){
+    public ResponseEntity<?> searchContacts(@RequestParam String query){
         return phoneServices.searchContact(query);
     }
 

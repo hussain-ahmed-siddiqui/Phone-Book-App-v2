@@ -62,11 +62,11 @@
         const url = new URL('/login','http://localhost:8080');
         url.searchParams.append('phoneNum',phoneNum);
         url.searchParams.append('password',password);
-        const response = await fetch(url,{method:'POST'});
-        console.log(response);
+        const response = await fetch(url,{method:'POST',credentials:"include"});
+        // console.log(response);
         const data = await response.json();
-        console.log(data);
-        console.log(data.status);
+        // console.log(data);
+        // console.log(data.status);
         // if(response.status===200){
         // }
         if(data.status===1){

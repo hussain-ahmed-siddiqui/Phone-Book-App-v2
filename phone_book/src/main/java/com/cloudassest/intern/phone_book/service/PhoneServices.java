@@ -39,6 +39,7 @@ EmailServiceImpl emailService;
 private final HttpHeaders headers;
 public PhoneServices(){
     headers = new HttpHeaders();
+    headers.setAccessControlAllowCredentials(true);
     headers.setAccessControlAllowOrigin("http://localhost:8081"); // Set this to a specific domain if needed
     headers.setAccessControlAllowMethods(Arrays.asList(
             HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.OPTIONS
@@ -116,7 +117,7 @@ public PhoneServices(){
         session.setAttribute("phoneNum", phoneNum);
         session.setAttribute("userId",user.getId());
 //        session.setMaxInactiveInterval(30*60);
-        System.out.println(currentSession()==null);
+        System.out.println("yes");
 //        HttpHeaders headers1 = new HttpHeaders(headers);
 //        headers1.add("Location", "http://localhost:8081/contacts/list");
 //        headers1.add("Location", "/contacts/list");
@@ -137,7 +138,7 @@ public PhoneServices(){
     }
 
 
-    public void updateContact(String id, String name, String phoneNum, String email) {
+    public ResponseEntity<?> updateContact(String id, String name, String phoneNum, String email) {
         contactRepository.findById(id).map(
                 existingContact -> {
                     existingContact.setName(name);
@@ -147,13 +148,14 @@ public PhoneServices(){
                 })
                 .orElseThrow(()->new RuntimeException("Contact not found with id " + id));
 
-
+        return ResponseEntity.ok().headers(headers).body(null);
     }
 
-    public List<Contact> searchContact(String query) {
+    public ResponseEntity<?> searchContact(String query) {
 
         String regex = "^" + Pattern.quote(query);
-        return contactRepository.findByUserNameRegex(regex, (String) currentSession().getAttribute("userId"));
+        List<Contact> contacts = contactRepository.findByUserNameRegex(regex, (String) currentSession().getAttribute("userId"));
+        return ResponseEntity.ok().headers(headers).body(contacts);
     }
 
     public ResponseEntity<?> sendOtp(String phoneNum) {
@@ -237,6 +239,7 @@ public PhoneServices(){
     }
 
     public ResponseEntity<?> checkOut() {
+
         HttpSession currSession = currentSession();
         if(currSession==null){
             System.out.println("bruh");

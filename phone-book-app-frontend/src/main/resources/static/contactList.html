@@ -72,12 +72,14 @@ formData.append('name', editedName);
 formData.append('phoneNum', editedPhoneNum);
 formData.append('email', editedEmail);
 
-fetch('contacts/edit', {
+fetch('http://localhost:8080/contacts/edit', {
     method: 'PUT', // or 'PUT' if you are updating an existing contact
     body: formData
+    ,credentials:"include"
 })
 .then(response => {
-    if (response.ok) {
+    console.log(response);
+    if (response.status===200) {
         window.location.href = '/contacts/list'; // Redirect on success
     } else {
         console.error('Server responded with a non-OK status');
@@ -118,9 +120,9 @@ function cancelEdit(row, originalContact) {
    function loadContacts() {
     fetch('http://localhost:8080/contacts',{
         method:'GET',
+        credentials:"include",
         })
-        .then(response => {console.log(response);
-        return response.json();})
+        .then(response => response.json())
         .then(contacts => {
             console.log(contacts);
             const tableBody = document.getElementById('contactTable').getElementsByTagName('tbody')[0];
@@ -144,7 +146,7 @@ function cancelEdit(row, originalContact) {
 }
 
     // Call loadContacts on page load
-    // window.onload = loadContacts;
+    window.onload = loadContacts;
 
     function logout(){
         fetch('http://localhost:8080/performLogout',{method:'GET',credentials:"include" }) .then(response => {
@@ -163,7 +165,7 @@ function cancelEdit(row, originalContact) {
     function searchContacts() {
         const searchQuery = document.getElementById('searchBox').value;
         console.log(searchQuery);
-       fetch(`http://localhost:8080/contacts/search?query=${encodeURIComponent(searchQuery)}`)
+       fetch(`http://localhost:8080/contacts/search?query=${encodeURIComponent(searchQuery)}`,{credentials:"include"})
             .then(response =>{console.log(response);
             return response.json();})
             .then(contacts => {
