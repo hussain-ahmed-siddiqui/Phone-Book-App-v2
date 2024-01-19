@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,7 +14,7 @@
     
     <div class="wrapper">
         <!--Login page,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,-->
-        <form action="/login" method="POST" id="Login" class="input-group">
+        <form id="Login" class="input-group">
             <!--login , name and password -->
             <h1>Login</h1>
             <div class="input-box">
@@ -22,7 +22,7 @@
                 <i class='bx bxs-user'></i>
             </div>
             <div class="input-box">
-                <input required name="password" type="Password" 
+                <input required name="password" id="password" type="Password" 
             placeholder="Password">
                 <i class='bx bxs-lock-alt'></i>
             </div>
@@ -35,7 +35,7 @@
             </div>
 
             <!--Login Button-->
-            <button type="submit" class="btn">Login</button>
+            <button id="loginButton" type="button" class="btn">Login</button>
 
             <!--Registration link-->
             
@@ -53,6 +53,28 @@
     
 <script>
         
+    document.getElementById('loginButton').addEventListener('click',async function(){
+
+        
+
+        const phoneNum = document.getElementById('phoneNum').value;
+        const password = document.getElementById('password').value;
+        const url = new URL('/login','http://localhost:8080');
+        url.searchParams.append('phoneNum',phoneNum);
+        url.searchParams.append('password',password);
+        const response = await fetch(url,{method:'POST'});
+        console.log(response);
+        const data = await response.json();
+        // if(response.status===200){
+        // }
+        if(data.status===1){
+            window.location.href='http://localhost:8081/contacts/list';
+
+        }
+    });
+
+
+
 </script>
     
 </body>

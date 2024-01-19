@@ -7,6 +7,7 @@ import com.cloudassest.intern.phone_book.model.Contact;
 import com.cloudassest.intern.phone_book.repositories.ContactRepository;
 import com.cloudassest.intern.phone_book.repositories.OtpRepository;
 import com.cloudassest.intern.phone_book.repositories.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -47,6 +48,8 @@ public PhoneServices(){
 }
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+
     public HttpSession currentSession(){
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         return attr.getRequest().getSession(false);
@@ -63,8 +66,20 @@ public PhoneServices(){
         return userRepository.findByPhoneNum(phoneNum);
     }
     //for fetching the contacts associated with the user that is found by the findByUsername() function
-    public List<Contact> findByUser(User currentUser) {
-        return contactRepository.findByUser(currentUser);
+    public ResponseEntity<?> findByUser() {
+        System.out.println(
+        currentSession()==null
+        );
+//        System.out.print("dewef");
+//        String phoneNum = (String) currentSession().getAttribute("phoneNum");
+
+//        User currentUser = userRepository.findByPhoneNum("03363482816");
+         List<Contact> contacts = contactRepository.findByUser(getCurrentUser());
+//        if (contacts.isEmpty()) {
+//            // If the list is empty, you can return a 204 No Content response
+//            return ResponseEntity.noContent().build();
+//        }
+         return ResponseEntity.ok().headers(headers).body(contacts);
     }
 
     public ResponseEntity<?> registerNewUser(String userName,String password, String phoneNum, String email){
@@ -86,24 +101,29 @@ public PhoneServices(){
 
     public ResponseEntity<?> AuthenticateUser(String phoneNum, String password){
         User user = userRepository.findByPhoneNum(phoneNum);
-        HttpHeaders headers1 = new HttpHeaders(headers);
+//        HttpHeaders headers1 = new HttpHeaders(headers);
 
 
         if(!passwordEncoder.matches(password, user.getPassword())){
-            headers1.add("Location", "/login");
-            return new ResponseEntity<>(headers,HttpStatus.FOUND);
+//            headers1.add("Location", "/login");
+            return ResponseEntity.ok().headers(headers).body("{\"status\": 0}");
+
         }
         if(user==null){
-            headers1.add("Location", "/login");
-            return new ResponseEntity<>(headers,HttpStatus.FOUND);
+//            headers1.add("Location", "/login");
+            return ResponseEntity.ok().headers(headers).body("{\"status\": 0}");
+
         }
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession(true);
         session.setAttribute("phoneNum", phoneNum);
         session.setAttribute("userId",user.getId());
-        session.setMaxInactiveInterval(30*60);
-        headers1.add("Location", "/contacts/list");
-        return new ResponseEntity<>(headers1,HttpStatus.FOUND);
+//        session.setMaxInactiveInterval(30*60);
+        System.out.println(currentSession()==null);
+        System.out.println(headers);
+//        headers1.add("Location", "/contacts/list");
+        return ResponseEntity.ok().headers(headers).body("{\"status\": 1}");
+
     }
 
     public ResponseEntity<?> addContact(String firstName, String middleName, String lastName, String phone, String email) {
@@ -207,5 +227,30 @@ public PhoneServices(){
         System.out.println("*********************************");
 
         return ResponseEntity.ok().headers(headers).body("{\"status\": 1}");
+    }
+
+    public ResponseEntity<?> check(HttpServletRequest request) {
+        System.out.println(request.getSession().getAttribute("phoneNum"));
+        System.out.println(request!=null);
+//        if(currentSession()==null){
+//            return new ResponseEntity<>(headers,HttpStatus.BAD_REQUEST);
+//        }
+        return new ResponseEntity<>(headers,HttpStatus.FOUND);
+    }
+
+    public ResponseEntity<?> checkOut() {
+        HttpSession currSession = currentSession();
+        if(currSession==null){
+            System.out.println("bruh");
+        }else {
+            currSession.invalidate();
+        }
+        currSession = currentSession();
+        if(currSession==null){
+            System.out.println("*********************************");
+            return new ResponseEntity<>(headers,HttpStatus.OK);
+
+        }
+        return null;
     }
 }

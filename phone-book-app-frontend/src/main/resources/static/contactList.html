@@ -28,6 +28,7 @@
 </table>
 
 <script>
+    
     function createContact(){
     window.location.href='/contacts/new';
 
@@ -115,9 +116,11 @@ function cancelEdit(row, originalContact) {
 
 
    function loadContacts() {
-    fetch('/contacts')
-        .then(response => response.json())
+    fetch('http://localhost:8080/contacts',{method:'GET'})
+        .then(response => {console.log(response);
+        return response.json();})
         .then(contacts => {
+            console.log(contacts);
             const tableBody = document.getElementById('contactTable').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = ''; // Clear existing table body
             contacts.forEach(contact => {
@@ -139,13 +142,14 @@ function cancelEdit(row, originalContact) {
 }
 
     // Call loadContacts on page load
-    window.onload = loadContacts;
+    // window.onload = loadContacts;
 
     function logout(){
-        fetch('/performLogout') .then(response => {
+        fetch('http://localhost:8080/performLogout') .then(response => {
             if (response.ok) {
                 window.location.href = '/login'; // Redirect to login page or any other page
             } else {
+                console.log(response);
                 throw new Error('Logout failed');
             }
         })
@@ -157,7 +161,7 @@ function cancelEdit(row, originalContact) {
     function searchContacts() {
         const searchQuery = document.getElementById('searchBox').value;
         console.log(searchQuery);
-       fetch(`/contacts/search?query=${encodeURIComponent(searchQuery)}`)
+       fetch(`http://localhost:8080/contacts/search?query=${encodeURIComponent(searchQuery)}`)
             .then(response =>{console.log(response);
             return response.json();})
             .then(contacts => {

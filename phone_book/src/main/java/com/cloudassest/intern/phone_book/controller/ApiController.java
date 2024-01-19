@@ -1,7 +1,6 @@
 package com.cloudassest.intern.phone_book.controller;
 
 import com.cloudassest.intern.phone_book.model.Contact;
-import com.cloudassest.intern.phone_book.model.User;
 import com.cloudassest.intern.phone_book.service.PhoneServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,10 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,9 +28,9 @@ public class ApiController {
             schema = @Schema(implementation = Contact.class, type = "array")
     ))
     @GetMapping("/contacts")
-    public List<Contact> listUserContacts(HttpServletRequest request) {
+    public ResponseEntity<?> listUserContacts() {
 
-        return phoneServices.findByUser(phoneServices.getCurrentUser());
+        return phoneServices.findByUser();
     }
     @Operation(summary = "Save new contact to database")
     @ApiResponse(responseCode = "303",description = "Redirect to Contacts list page")
@@ -49,6 +45,8 @@ public class ApiController {
         return phoneServices.registerNewUser(name,password,phoneNum,email);
     }
 
+    @Operation(summary = "logs in the user")
+    @ApiResponse(responseCode = "200",description = "Redirect to Contacts list page")
     @PostMapping("/login")
     public ResponseEntity<?> getForm(@RequestParam String phoneNum, @RequestParam String password){
 //        System.out.println(name+" "+password);
@@ -80,16 +78,13 @@ public class ApiController {
         return phoneServices.searchContact(query);
     }
 
-
+    @GetMapping("/sessionValidation")
+    public ResponseEntity<?> check(HttpServletRequest request){
+       return phoneServices.check(request);
+    }
 
     @GetMapping("/performLogout")
-    public void logout(){
-        HttpSession currSession = phoneServices.currentSession();
-        currSession.invalidate();
-
-        currSession = phoneServices.currentSession();
-        if(currSession==null){
-            System.out.println("*********************************");
-        }
+    public ResponseEntity<?> logout(){
+        return phoneServices.checkOut();
     }
 }

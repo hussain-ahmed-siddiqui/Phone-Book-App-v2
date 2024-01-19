@@ -54,5 +54,8 @@ public FrontendController(){
 
         return "redirect:/createContact.html";
     }
-
+    @GetMapping("/contacts/list")
+    public String contactList(){
+        return "redirect:/contactList.html";
+    }
 }
