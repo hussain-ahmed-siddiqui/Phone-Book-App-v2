@@ -131,9 +131,8 @@ public PhoneServices(){
         contact.setEmail(email);
         contact.setUser(getCurrentUser());
         contactRepository.save(contact);
-        HttpHeaders headers1 = new HttpHeaders(headers);
-        headers1.add("Location", "/contacts/list");
-        return new ResponseEntity<>(headers1,HttpStatus.FOUND);
+
+        return ResponseEntity.ok().headers(headers).body(null);
 
     }
 
